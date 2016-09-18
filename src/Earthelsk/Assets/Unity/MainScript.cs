@@ -1,4 +1,10 @@
-﻿using Assets.Movement;
+﻿using Assets.Core.Buildings.Models.Saloons;
+using Assets.Core.ValueTypes;
+using Assets.Lib;
+using Assets.Lib.Commands;
+using Assets.Lib.Ioc;
+using Assets.Movement;
+using Assets.Unity.Logs;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -6,6 +12,8 @@ public class MainScript : MonoBehaviour {
 
     private MovementController movement = new MovementController();
     private GameObject camera;
+    private TeclynUnity teclyn;
+    private CommandService commandService;
 
 
     // Use this for initialization
@@ -27,15 +35,15 @@ public class MainScript : MonoBehaviour {
             light1.intensity *= 10;
         }));
 
-	    for (var i = -10; i < 10; i++)
-	    {
-            for (var j = -10; j < 10; j++)
-            {
-                var tile = this.GetFactory().CreateTile(Color.grey);
-                tile.transform.position = new Vector3(i, 0, j);
-                this.AddChild(tile);
-            }
-        }
+	    //for (var i = -10; i < 10; i++)
+	    //{
+     //       for (var j = -10; j < 10; j++)
+     //       {
+     //           var tile = this.GetFactory().CreateTile(Color.grey);
+     //           tile.transform.position = new Vector3(i, 0, j);
+     //           this.AddChild(tile);
+     //       }
+     //   }
 
         //var camera = gameObject.AddComponent<Camera>();
         ////var camera = new Camera();
@@ -79,10 +87,37 @@ public class MainScript : MonoBehaviour {
         //var sceneManager = this.GetComponent<SceneManager>();
 
         //this.GetHashCode()/
+
+        this.teclyn = TeclynUnity.Initialize();
+        this.teclyn.Get<BasicIocContainer>().Register<Assets.Lib.Logs.ILogger, UnityLogger>();
+
+        this.commandService = teclyn.Get<CommandService>();
+
     }
 
     // Update is called once per frame
     void Update () {
 	    this.movement.Compute(camera);
 	}
+
+    void OnGUI()
+    {
+        // Make a background box
+        GUI.Box(new Rect(10, 10, 100, 90), "Loader Menu");
+
+        // Make the first button. If it is pressed, Application.Loadlevel (1) will be executed
+        if (GUI.Button(new Rect(20, 40, 80, 20), "Level 1"))
+        {
+            var command = this.commandService.Create<StartSaloonConstruction>();
+            command.Location = new TileLocation(10, 10);
+            command.Orientation = Orientation.East;
+            commandService.Execute(command);
+        }
+
+        // Make the second button.
+        if (GUI.Button(new Rect(20, 70, 80, 20), "Level 2"))
+        {
+            //Application.LoadLevel(2);
+        }
+    }
 }

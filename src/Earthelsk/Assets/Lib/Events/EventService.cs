@@ -3,6 +3,7 @@ using System.Linq;
 using System.Reflection;
 using Assets.Lib.Dummies;
 using Assets.Lib.Ioc;
+using Assets.Lib.Logs;
 using Assets.Lib.Repositories;
 using Assets.Lib.Tools;
 using Assets.Lib.WorldObjects;
@@ -11,6 +12,7 @@ namespace Assets.Lib.Events
 {
     public class EventService
     {
+        [Inject]
         public Repository Repository { get; set; }
 
         [Inject]
@@ -22,19 +24,37 @@ namespace Assets.Lib.Events
         [Inject]
         public Time Time { get; set; }
 
+        [Inject]
+        public ILogger Log { get; set; }
+
         public void Raise<T>(IEvent<T> @event) where T : IWorldObject
         {
             var eventInformation = this.BuildEventInformation(@event);
-            var worldObject = Repository.GetById<T>(@event.AggregateId);
+            var worldObject = this.GetAggregate<T>(@event.AggregateId);
 
             if (worldObject == null)
             {
                 worldObject = this.BuildAggregate<T>();
             }
 
-            @event.Apply(worldObject, null);
+            @event.Apply(worldObject, this.BuildEventInformation(@event));
+
+
+            this.Log.Log("Event " + @event.GetType().Name + " raised!");
 
             this.LaunchEventHandlers(worldObject, @event, eventInformation);
+        }
+
+        private T GetAggregate<T>(string id) where T : IWorldObject
+        {
+            var aggregate = this.Repository.GetByIdOrNull<T>(id);
+
+            if (aggregate == null)
+            {
+                aggregate = Activator.CreateInstance<T>();
+            }
+
+            return aggregate;
         }
 
         private IEventInformation BuildEventInformation(IEvent @event)
@@ -42,7 +62,7 @@ namespace Assets.Lib.Events
             var eventType = @event.GetType();
 
             var buildTypedEventInformationMethod = this.GetType()
-                .GetMethod("BuildTypedEventInformation", BindingFlags.Instance | BindingFlags.NonPublic)
+                .GetMethod("BuildTypedEventInformation", BindingFlags.Instance | BindingFlags.Public)
                 .MakeGenericMethod(eventType);
 
             var result = buildTypedEventInformationMethod.Invoke(this, new object[] { @event });

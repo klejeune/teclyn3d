@@ -9,7 +9,7 @@ namespace Assets.Lib.Events
             where TEvent : IEvent;
     }
 
-    public interface IEventInformation<out TEvent> where TEvent : IEvent
+    public interface IEventInformation<out TEvent> : IEventInformation where TEvent : IEvent
     {
         DateTime Date { get; }
         TEvent Event { get; }

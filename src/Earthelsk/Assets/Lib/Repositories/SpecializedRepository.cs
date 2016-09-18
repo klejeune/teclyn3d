@@ -20,6 +20,11 @@ namespace Assets.Lib.Repositories
             return items[id];
         }
 
+        public T GetByIdOrNull(string id)
+        {
+            return items.GetValueOrDefault(id);
+        }
+
         public IEnumerator<T> GetEnumerator()
         {
             return this.items.Values.GetEnumerator();

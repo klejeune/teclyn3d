@@ -97,6 +97,8 @@
     <Compile Include="Assets\Lib\Gui\PanelAction.cs" />
     <Compile Include="Assets\Lib\Ioc\BasicIocContainer.cs" />
     <Compile Include="Assets\Lib\Ioc\InjectAttribute.cs" />
+    <Compile Include="Assets\Lib\Logs\DummyLogger.cs" />
+    <Compile Include="Assets\Lib\Logs\ILogger.cs" />
     <Compile Include="Assets\Lib\Repositories\Repository.cs" />
     <Compile Include="Assets\Lib\Repositories\SpecializedRepository.cs" />
     <Compile Include="Assets\Lib\TeclynUnity.cs" />
@@ -118,6 +120,7 @@
     <Compile Include="Assets\Core\Buildings\Generic\Events\BuildingDestroyed.cs" />
     <Compile Include="Assets\Core\Buildings\Saloons\Models\Saloon.cs" />
     <Compile Include="Assets\Unity\GameObjectFactory.cs" />
+    <Compile Include="Assets\Unity\Logs\UnityLogger.cs" />
     <Compile Include="Assets\Unity\TileMap.cs" />
     <Compile Include="Assets\Lib\WorldObjects\WorldObjectAttribute.cs" />
     <Compile Include="Assets\Unity\Components\Flat.cs" />

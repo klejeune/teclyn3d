@@ -17,6 +17,11 @@ namespace Assets.Lib.Repositories
             return this.Specialize<T>().GetById(id);
         }
 
+        public T GetByIdOrNull<T>(string id) where T : IWorldObject
+        {
+            return this.Specialize<T>().GetByIdOrNull(id);
+        }
+
         private SpecializedRepository<T> Specialize<T>() where T : IWorldObject
         {
             return this.repositories[typeof(T)] as SpecializedRepository<T>;

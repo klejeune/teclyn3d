@@ -5,6 +5,7 @@ using Assets.Core.Buildings.Models.Saloons;
 using Assets.Core.Buildings.Saloons.Models;
 using Assets.Core.Engine;
 using Assets.Lib.Ioc;
+using Assets.Lib.Logs;
 using Assets.Lib.Repositories;
 using Assets.Lib.WorldObjects;
 
@@ -30,10 +31,13 @@ namespace Assets.Lib
         public void RegisterServices()
         {
             this.IocContainer.Register<Repository>();
-            this.IocContainer.Register<SpecializedRepository<IWorldObject>>();
-            this.IocContainer.Register<SpecializedRepository<IBuilding>>();
-            this.IocContainer.Register<SpecializedRepository<IUnit>>();
-            this.IocContainer.Register<SpecializedRepository<Saloon>>();
+            this.IocContainer.Register<ILogger, DummyLogger>();
+
+            var repository = this.Get<Repository>();
+            repository.Register<IWorldObject>();
+            repository.Register<IBuilding>();
+            repository.Register<IUnit>();
+            repository.Register<Saloon>();
         }
 
         public T Get<T>()

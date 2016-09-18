@@ -2,6 +2,7 @@
 using Assets.Core.Buildings.Events;
 using Assets.Core.Buildings.Generic.Events;
 using Assets.Core.Buildings.Generic.Models;
+using Assets.Core.Buildings.Models.Saloons;
 using Assets.Core.Buildings.Saloons.Events;
 using Assets.Lib.Events;
 
@@ -16,7 +17,7 @@ namespace Assets.Core.Buildings.Models
 
         protected BuildingConstructionState constructionState = new BuildingConstructionState();
         
-        protected void StartConstruction(IEventInformation<BuildingConstructionStarted> eventInformation)
+        protected void StartConstruction<T>(IEventInformation<T> eventInformation) where T : BuildingConstructionStarted
         {
             this.Id = eventInformation.Event.AggregateId;
             this.Name = eventInformation.Event.Name;
@@ -25,12 +26,12 @@ namespace Assets.Core.Buildings.Models
             this.constructionState.Total = eventInformation.Event.RequiredConstructionUnits;
         }
 
-        protected void UpdateConstruction(IEventInformation<BuildingConstructionUpdated> eventInformation)
+        protected void UpdateConstruction<T>(IEventInformation<T> eventInformation) where T : BuildingConstructionUpdated
         {
             this.constructionState.Current += eventInformation.Event.Amount;
         }
 
-        protected void FinishConstruction(IEventInformation<BuildingConstructionFinished> eventInformation)
+        protected void FinishConstruction<T>(IEventInformation<T> eventInformation) where T : BuildingConstructionFinished
         {
             this.constructionState.EndDate = eventInformation.Date;
         }

@@ -44,7 +44,7 @@ namespace Assets.Lib.Ioc
         {
             Type concreteType;
 
-            if (!this.mappings.TryGetValue(type, out concreteType) && !type.IsInterface && !type.IsAbstract)
+            if (!this.mappings.TryGetValue(type, out concreteType) || (!type.IsInterface && !type.IsAbstract))
             {
                 concreteType = type;
             }
